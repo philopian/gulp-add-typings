@@ -1,15 +1,19 @@
 {
-  "name": "gulp-add-typings",
-  "version": "1.0.0",
-  "description": "looks at your bower.json file and adds all the typings to your project",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Phil Willis <pdotwdot@gmail.com> (http://www.philwillis.pw/)",
-  "license": "ISC",
-  "dependencies": {
-    "shelljs": "^0.7.6",
-    "through2": "^2.0.3"
-  }
+    "name": "gulp-add-typings",
+    "version": "1.0.0",
+    "description": "looks at your bower.json file and adds all the typings to your project",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/philopian/gulp-add-typings"
+    },
+    "author": "Phil Willis <pdotwdot@gmail.com> (http://www.philwillis.pw/)",
+    "license": "ISC",
+    "dependencies": {
+        "shelljs": "^0.7.6",
+        "through2": "^2.0.3"
+    }
 }
