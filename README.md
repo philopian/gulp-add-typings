@@ -2,6 +2,13 @@
 
 - This package will loop thru your bower.json file and add all the typings
 
+
+## Install
+~~~
+$ npm i gulp-add-typings --save-dev
+~~~
+
+## Basic Usage
 - e.g. 
 ~~~
 const gulp = require('gulp');
