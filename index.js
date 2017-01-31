@@ -3,9 +3,17 @@ var path = require('path');
 var fs = require('fs');
 const shell = require('shelljs');
 
-function shellAsync(command) {
+function shellSync(package) {
     return new Promise((resolve, reject) => {
-        resolve(shell.exec(command));
+        if (shell.exec(package.command, { silent: true }).code == 0) {
+            shell.exec(package.command, { silent: true }, function(code, stdout, stderr) {
+                console.log('Program output:', stdout);
+                resolve();
+            });
+        } else {
+            console.log('No typings found for: (%s)', package.name);
+            resolve();
+        }
     })
 }
 
@@ -17,34 +25,51 @@ module.exports = function(label) {
                 throw err;
             }
 
-            // Get a list of the the bower dependencies
-            var bowerJson = JSON.parse(content);
-            let depBower = "";
-            for (var i in bowerJson.dependencies) {
-                depBower += "dt~" + i + " ";
-            }
-
-            // Commands
-            let commandInitTypings = 'typings init --name appseed';
-            let commandAddBowerTypings = 'typings install ' + depBower + ' --global --save';
-
             // Run commands
             fs.stat('typings.json', function(err, stat) {
                 if (err == null) {
                     console.log('Typings file already exists');
-                    shellAsync(commandAddBowerTypings).then(() => {
-                        return;
-                    });
+                    var keyCount = 0;
+                    var bowerJson = JSON.parse(content).dependencies;
+                    for (var i in bowerJson) {
+                        let obj = {
+                            name: i,
+                            command: 'typings install dt~' + i + ' --global --save'
+                        }
+                        shellSync(obj)
+                            .then((cmd) => {
+                                keyCount++;
+                                if (keyCount == Object.keys(bowerJson).length) {
+                                    cb(null, file);
+                                }
+                            });
+                    }
                 } else {
-                    shellAsync(commandInitTypings).then(() => {
-                        return shellAsync(commandAddBowerTypings);
+                    let cmdInitTypings = {
+                        name: "init",
+                        command: 'typings init'
+                    }
+                    shellSync(cmdInitTypings).then(() => {
+
+                        var keyCount = 0;
+                        var bowerJson = JSON.parse(content).dependencies;
+                        for (var i in bowerJson) {
+                            let obj = {
+                                name: i,
+                                command: 'typings install dt~' + i + ' --global --save'
+                            }
+                            shellSync(obj)
+                                .then((cmd) => {
+                                    keyCount++;
+                                    if (keyCount == Object.keys(bowerJson).length) {
+                                        cb(null, file);
+                                    }
+                                });
+                        }
                     });
                 }
             });
-
-            cb(null, file);
         });
     }
-
     return through.obj(log);
 };

@@ -1,6 +1,6 @@
 {
     "name": "gulp-add-typings",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "looks at your bower.json file and adds all the typings to your project",
     "main": "index.js",
     "scripts": {
